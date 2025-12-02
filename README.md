@@ -315,6 +315,15 @@ print(f"HTML table: {html_content}")
 # Citation
 
 ```
+@misc{zhang2025triviaselfsupervisedfinetuningvisionlanguage,
+      title={TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognition}, 
+      author={Junyuan Zhang and Bin Wang and Qintong Zhang and Fan Wu and Zichen Wen and Jialin Lu and Junjie Shan and Ziqi Zhao and Shuya Yang and Ziling Wang and Ziyang Miao and Huaping Zhong and Yuhang Zang and Xiaoyi Dong and Ka-Ho Chow and Conghui He},
+      year={2025},
+      eprint={2512.01248},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2512.01248}, 
+}
 ```
 
 # License
