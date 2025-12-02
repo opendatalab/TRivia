@@ -124,9 +124,9 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description='Evaluate model checkpoints')
-    parser.add_argument('--ckpt_root', type=str, required=True,
+    parser.add_argument('--ckpt_root', type=str, default="opendatalab/TRivia-3B",
                        help='Path to the model checkpoint directory')
-    parser.add_argument('--image_root', type=str, required=True,
+    parser.add_argument('--image_root', type=str, default="./examples",
                        help='Path to the image folder or image list file')
     parser.add_argument('--output_path', type=str, default='./vllm_offline_output.json',
                        help='Path to the output prediction file')

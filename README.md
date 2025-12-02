@@ -7,11 +7,13 @@ TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognit
 </p>
 
 <p align="center">
-<a href="https://arxiv.org/abs/2512.01248"><b>📜 arXiv</b></a> |
-<a href="https://huggingface.co/opendatalab/TRivia-3B"><b>🤗 Huggingface Model</b></a>
+<a href=""><b>📜 arXiv</b></a> |
+<a href="https://github.com/opendatalab/TRivia"><b>Github</b></a> |
+<a href="https://huggingface.co/spaces/opendatalab/TRivia-3B"><b>🤗 Huggingface Demo</b></a>
+<a href="https://huggingface.co/Carkham/TRivia"><b>🤗 Huggingface Model</b></a>
 </p>
 
-TRivia is a novel self-supervised fine-tuning framework of vision-language models for table recognition. This repository contains the TRivia-3B, an advanced table recognition VLMs trained from Qwen2.5-VL-3B using TRivia, and demo code. TRivia-3B has demonstrated superior performance on multiple real-world table recognition benchmarks.
+TRivia is a novel self-supervised fine-tuning framework of vision-language models for table recognition. This repository contains the **TRivia-3B**, an advanced table recognition VLMs trained from Qwen2.5-VL-3B using TRivia, and demo code. TRivia-3B has demonstrated superior performance on multiple real-world table recognition benchmarks.
 
 # Key Features:
 - ⭐ Powerful table recognition capabilities, generalizing across digital tables, scanned tables, and photographed tables.
@@ -215,7 +217,7 @@ We compare the performance of TRivia-3B with other table recognition solution on
       <td>90.81</td>
     </tr>
     <tr>
-      <td>TRivia-3B</td>
+      <td><b>TRivia-3B(Ours)</b></td>
       <td><b>91.79</b></td>
       <td>93.81</td>
       <td><b>91.60</b></td>
@@ -266,13 +268,13 @@ You can start either a vLLM or SGLang server to serve LLMs efficiently, and then
 
 - Start vLLM Server
 ```bash
-vllm serve opendatalab/TRivia --port 10000 --gpu_memory_utilization 0.8 
+vllm serve opendatalab/TRivia-3B --port 10000 --gpu_memory_utilization 0.8 
 ```
 - Table Image Request
 ```python
 import base64
 from openai import OpenAI
-from otsl_utils import otsl_to_html
+from otsl_utils import convert_otsl_to_html
 
 client = OpenAI(
     api_key="EMPTY",
@@ -301,13 +303,13 @@ messages = [
 ]
 
 response = client.chat.completions.create(
-    model="opendatalab/TRivia",
+    model="opendatalab/TRivia-3B",
     messages=messages,
     temperature=0.0,
     max_tokens=8192
 )
 otsl_content = response.choices[0].message.content
-html_content = otsl_to_html(otsl_content)
+html_content = convert_otsl_to_html(otsl_content)
 print(f"Generated otsl tags: {otsl_content}")
 print(f"HTML table: {html_content}")
 ```
@@ -328,4 +330,10 @@ print(f"HTML table: {html_content}")
 }
 ```
 
+
 # License
+
+
+
+
+
