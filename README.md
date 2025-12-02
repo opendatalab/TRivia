@@ -7,8 +7,8 @@ TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognit
 </p>
 
 <p align="center">
-<a href="https://arxiv.org/abs/2412.02592v2"><b>📜 arXiv</b></a> |
-<a href="https://huggingface.co/datasets/opendatalab/OHR-Bench"><b>🤗 Huggingface Model</b></a>
+<a href="https://arxiv.org/abs/2512.01248"><b>📜 arXiv</b></a> |
+<a href="https://huggingface.co/opendatalab/TRivia-3B"><b>🤗 Huggingface Model</b></a>
 </p>
 
 TRivia is a novel self-supervised fine-tuning framework of vision-language models for table recognition. This repository contains the TRivia-3B, an advanced table recognition VLMs trained from Qwen2.5-VL-3B using TRivia, and demo code. TRivia-3B has demonstrated superior performance on multiple real-world table recognition benchmarks.
@@ -55,7 +55,7 @@ We compare the performance of TRivia-3B with other table recognition solution on
     <tr>
       <td>SLANNet-plus</td>
       <td>86.57</td>
-      <td>96.43</td>
+      <td><b>96.43</b></td>
       <td>81.90</td>
       <td>89.08</td>
       <td>50.93</td>
@@ -68,7 +68,7 @@ We compare the performance of TRivia-3B with other table recognition solution on
     <tr>
       <td>UniTable</td>
       <td>86.44</td>
-      <td>95.66</td>
+      <td><u>95.66</u></td>
       <td>82.76</td>
       <td>89.82</td>
       <td>57.84</td>
@@ -112,7 +112,7 @@ We compare the performance of TRivia-3B with other table recognition solution on
       <td>-</td>
       <td>-</td>
       <td>91.02</td>
-      <td>94.97</td>
+      <td><u>94.97</u></td>
       <td>80.98</td>
       <td>86.19</td>
       <td>84.12</td>
@@ -126,12 +126,12 @@ We compare the performance of TRivia-3B with other table recognition solution on
       <td>-</td>
       <td>90.90</td>
       <td>94.32</td>
-      <td>85.56</td>
-      <td>90.07</td>
+      <td><b>85.56</b></td>
+      <td><u>90.07</u></td>
       <td>88.94</td>
       <td>89.47</td>
-      <td>88.93</td>
-      <td>91.23</td>
+      <td><u>88.93</u></td>
+      <td><u>91.23</u></td>
     </tr>
     <tr>
       <td>GPT-4o</td>
@@ -192,7 +192,7 @@ We compare the performance of TRivia-3B with other table recognition solution on
       <td>PaddleOCR-VL</td>
       <td>-</td>
       <td>-</td>
-      <td>91.12</td>
+      <td><u>91.12</u></td>
       <td>94.62</td>
       <td>79.62</td>
       <td>85.04</td>
@@ -209,30 +209,30 @@ We compare the performance of TRivia-3B with other table recognition solution on
       <td>94.68</td>
       <td>79.76</td>
       <td>85.16</td>
-      <td>87.13</td>
-      <td>90.62</td>
+      <td><u>87.13</u></td>
+      <td><u>90.62</u></td>
       <td>86.82</td>
       <td>90.81</td>
     </tr>
     <tr>
-      <td>opt-3B</td>
-      <td>91.79</td>
+      <td>TRivia-3B</td>
+      <td><b>91.79</b></td>
       <td>93.81</td>
-      <td>91.60</td>
-      <td>95.01</td>
-      <td>84.90</td>
-      <td>90.17</td>
-      <td>90.76</td>
-      <td>94.03</td>
-      <td>89.88</td>
-      <td>93.60</td>
+      <td><b>91.60</b></td>
+      <td><b>95.01</b></td>
+      <td><u>84.90</u></td>
+      <td><b>90.17</b></td>
+      <td><b>90.76</b></td>
+      <td><b>94.03</b></td>
+      <td><b>89.88</b></td>
+      <td><b>93.60</b></td>
     </tr>
   </tbody>
 </table>
 The overall performance indicates the weighted average score across OmniDocBench v1.5, CC-OCR, and OCRBench v2.
 
 # Installation
-TRivia-3B is trained based on Qwen2.5-VL-3B, so you can follow the [Qwen2.5-VL-3B installation guide](https://github.com/QwenLM/Qwen3-VL?tab=readme-ov-file#quickstart). 
+TRivia-3B is trained based on Qwen2.5-VL-3B so that you can follow the [Qwen2.5-VL-3B installation guide](https://github.com/QwenLM/Qwen3-VL?tab=readme-ov-file#quickstart). 
 
 We highly recommend installing [`vLLM >= 0.7.2`](https://github.com/vllm-project/vllm) to improve inference speed.
 
@@ -245,10 +245,12 @@ TRivia-3B supports table parsing with table images as input and outputting OTSL 
 Make sure you have installed `vllm >= 0.7.2`. Papre your table images in a folder and run the following command:
 
 ```bash
-python run_vllm_offline_inf.py --ckpt_root opendatalab/TRivia --image_root /path/to/images --output_path ./vllm_offline_output.json
+python run_vllm_offline_inf.py --ckpt_root opendatalab/TRivia-3B --image_root /path/to/images --output_path ./vllm_offline_output.json
+# Examples
+python run_vllm_offline_inf.py --ckpt_root opendatalab/TRivia-3B --image_root ./examples --output_path ./examples_output.json
 ```
 
-The output is a JSON file, formatted as folows:
+The output is a JSON file ([example](./example.json)) which is formatted as folows:
 ```json
 [
     {
@@ -278,7 +280,7 @@ client = OpenAI(
     timeout=3600
 )
 
-image_path = "examples/docstructbench_llm-raw-scihub-o.O-ijc.22994.pdf_3_5.png"
+image_path = "./examples/docstructbench_llm-raw-scihub-o.O-ijc.22994.pdf_3_5.png"
 with open(path, "rb") as image_file:
     base64_image = base64.b64encode(image_file.read()).decode('utf-8')
 

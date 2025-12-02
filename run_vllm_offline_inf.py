@@ -6,9 +6,9 @@ import torch
 from glob import glob
 from PIL import Image
 from bs4 import BeautifulSoup
-from transformers import AutoTokenizer, AutoProcessor
+from transformers import AutoProcessor
 
-from otsl_utils import otsl_to_html
+from otsl_utils import convert_otsl_to_html
 
 SYSTEM_PROMPT_OTSL = (
     "You are an AI specialized in recognizing and extracting table from images. Your mission is to analyze the table image and generate the result in OTSL format using specified tags. Output only the results without any other words and explanation."
@@ -16,7 +16,7 @@ SYSTEM_PROMPT_OTSL = (
 
 Image.MAX_IMAGE_PIXELS = None
 
-def _process_single_path(p, model_type, tokenizer, processor, placeholder):
+def _process_single_path(p, processor, placeholder):
     image_path = p
     from qwen_vl_utils import process_vision_info
     messages = []
@@ -59,8 +59,6 @@ def prepare_data(paths, ckpt_root):
     # 使用多进程处理每个path项，并使用 tqdm 显示进度
     with concurrent.futures.ThreadPoolExecutor(max_workers=96) as executor:
         func = partial(_process_single_path,
-                    model_type=model_type,
-                    tokenizer=tokenizer,
                     processor=processor,
                     placeholder=placeholder)
         
@@ -86,7 +84,7 @@ def run_ckpt(item):
     else:
         # 否则按目录读取图片
         paths = glob(image_root + "/*.jpg") + glob(image_root + "/*.png")
-    _inputs, stop_token_ids = prepare_data_aug(paths, ckpt_root)
+    _inputs, stop_token_ids = prepare_data(paths, ckpt_root)
     print(_inputs[0])
 
     print("=" * 15 + "Preparing  LLM" + "=" * 15)
@@ -110,7 +108,7 @@ def run_ckpt(item):
     results = []
     for path, o in zip(paths, outputs):
         otsl_text = o.outputs[0].text
-        html_text = otsl_to_html(otsl_text) if otsl_text else ""
+        html_text = convert_otsl_to_html(otsl_text) if otsl_text else ""
         results.append({
             "path": path,
             "otsl": otsl_text,
