@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README_zh.md)
+
+</div>
+
 <h1 align="center">
 TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognition
 </h1>
@@ -244,7 +250,7 @@ TRivia-3B supports table parsing with table images as input and outputting OTSL 
 > TRivia-3B is an experimental model, and it currently does not support parsing formulas in tables or tables with images.
 
 ## Using vLLM for offline inference
-Make sure you have installed `vllm >= 0.7.2`. Papre your table images in a folder and run the following command:
+Make sure you have installed `vllm >= 0.7.2`. Prepare your table images in a folder and run the following command:
 
 ```bash
 python run_vllm_offline_inf.py --ckpt_root opendatalab/TRivia-3B --image_root /path/to/images --output_path ./vllm_offline_output.json
@@ -332,8 +338,5 @@ print(f"HTML table: {html_content}")
 
 
 # License
-
-
-
-
+[Apache License 2.0](LICENSE)
 
