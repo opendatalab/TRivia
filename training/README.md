@@ -62,7 +62,6 @@ We recommend using at least two servers: one to deploy the language model for QA
 
 First, launch the language model service on other deployments for QA. Here is an example of deploying Qwen3-8B.
 ```bash
-# 首先启动QA模型。在另外一个节点上运行，需要一个四卡节点。
 vllm serve Qwen/Qwen3-8B --served-model-name Qwen/Qwen3-8B --chat-template ./qwen3_nonthinking.jinja --host 0.0.0.0 --port 10000
 ```
 
