@@ -26,7 +26,7 @@ pip install -e .
 
 ## Data preparation
 
-We follow the [ms-swift data format](https://swift.readthedocs.io/zh-cn/latest/Customization/Custom-dataset.html#id6) and add an extra column for `qa_paris` to indicate the QA for this image. Here is an example of a single data entry. We create a sample dataset for reference based on [TableVQA from WildDoc](https://huggingface.co/datasets/ByteDance/WildDoc). It can be used for training can be found at [exp/tablevqa_samples.jsonl](exps/tablevqa_samples.jsonl)
+We follow the [ms-swift data format](https://swift.readthedocs.io/zh-cn/latest/Customization/Custom-dataset.html#id6) and add an extra column for `qa_paris` to indicate the QA for this image. Here is an example of a single data entry. We create a sample dataset for reference based on [TableVQA from WildDoc](https://huggingface.co/datasets/ByteDance/WildDoc). It can can be found at [exp/tablevqa_samples.jsonl](exps/tablevqa_samples.jsonl)
 
 ```json
 {
