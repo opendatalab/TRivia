@@ -362,6 +362,155 @@ def convert_otsl_to_html(otsl_content: str) -> str:
     
     return result
 
+def normalize_html_omni(text):
+    def process_table_html(md_i):
+        """
+        pred_md format edit
+        """
+        def process_table_html(html_content):
+            soup = BeautifulSoup(html_content, 'html.parser')
+            th_tags = soup.find_all('th')
+            for th in th_tags:
+                th.name = 'td'
+            thead_tags = soup.find_all('thead')
+            for thead in thead_tags:
+                thead.unwrap()  # unwrap()会移除标签但保留其内容
+            math_tags = soup.find_all('math')
+            for math_tag in math_tags:
+                alttext = math_tag.get('alttext', '')
+                alttext = f'${alttext}$'
+                if alttext:
+                    math_tag.replace_with(alttext)
+            span_tags = soup.find_all('span')
+            for span in span_tags:
+                span.unwrap()
+            return str(soup)
+
+        table_res=''
+        table_res_no_space=''
+        if '<table' in md_i.replace(" ","").replace("'",'"'):
+            md_i = process_table_html(md_i)
+            table_res = html.unescape(md_i).replace('\n', '')
+            table_res = unicodedata.normalize('NFKC', table_res).strip()
+            pattern = r'<table\b[^>]*>(.*)</table>'
+            tables = re.findall(pattern, table_res, re.DOTALL | re.IGNORECASE)
+            table_res = ''.join(tables)
+            # table_res = re.sub('<table.*?>','',table_res)
+            table_res = re.sub('( style=".*?")', "", table_res)
+            table_res = re.sub('( height=".*?")', "", table_res)
+            table_res = re.sub('( width=".*?")', "", table_res)
+            table_res = re.sub('( align=".*?")', "", table_res)
+            table_res = re.sub('( class=".*?")', "", table_res)
+            table_res = re.sub('</?tbody>',"",table_res)
+            
+            table_res = re.sub(r'\s+', " ", table_res)
+            table_res_no_space = '<html><body><table border="1" >' + table_res.replace(' ','') + '</table></body></html>'
+            # table_res_no_space = re.sub(' (style=".*?")',"",table_res_no_space)
+            # table_res_no_space = re.sub(r'[ ]', " ", table_res_no_space)
+            table_res_no_space = re.sub('colspan="', ' colspan="', table_res_no_space)
+            table_res_no_space = re.sub('rowspan="', ' rowspan="', table_res_no_space)
+            table_res_no_space = re.sub('border="', ' border="', table_res_no_space)
+
+            table_res = '<table>' + table_res + '</table>'
+            # table_flow.append(table_res)
+            # table_flow_no_space.append(table_res_no_space)
+
+        return table_res, table_res_no_space
+    
+    def clean_table(input_str,flag=True):
+        if flag:
+            input_str = input_str.replace('<sup>', '').replace('</sup>', '')
+            input_str = input_str.replace('<sub>', '').replace('</sub>', '')
+            input_str = input_str.replace('<span>', '').replace('</span>', '')
+            input_str = input_str.replace('<div>', '').replace('</div>', '')
+            input_str = input_str.replace('<p>', '').replace('</p>', '')
+            input_str = input_str.replace('<spandata-span-identity="">', '')
+            input_str = re.sub('<colgroup>.*?</colgroup>','',input_str)
+        return input_str
+    
+    norm_text, _ = process_table_html(text)
+    norm_text = clean_table(norm_text)
+    return norm_text.replace('> ', '>').replace(" </td>", "</td>")
+
+def html_to_otsl(html_table):
+    soup = BeautifulSoup(html_table, 'html.parser')
+    table = soup.find('table')
+    if not table:
+        return ""
+
+    rows = table.find_all('tr')
+
+    # 创建一个二维数组来存储展开后的表格
+    max_cols = 0
+    for row in rows:
+        cells = row.find_all(['td', 'th'])
+        curr_cols = 0
+        for cell in cells:
+            curr_cols += int(cell.get('colspan', 1))
+        max_cols = max(max_cols, curr_cols)
+
+    grid = [[None] * max_cols for _ in range(len(rows))]
+    cell_contents = [['' for _ in range(max_cols)] for _ in range(len(rows))]
+
+    # 填充表格
+    for i, row in enumerate(rows):
+        cells = row.find_all(['td', 'th'])
+        col_idx = 0
+
+        for cell in cells:
+            # 找到下一个空位置
+            while col_idx < max_cols and grid[i][col_idx] is not None:
+                col_idx += 1
+
+            if col_idx >= max_cols:
+                break
+                
+            rowspan = int(cell.get('rowspan', 1))
+            colspan = int(cell.get('colspan', 1))
+
+            # 获取单元格内容
+            content = cell.get_text(strip=True)
+
+            
+            if content != "":
+                grid[i][col_idx] = "<fcel>" # 标记合并主单元格为M
+            else:
+                grid[i][col_idx] = "<ecel>" # 标记普通单元格为C
+            cell_contents[i][col_idx] = content
+
+            # 填充当前单元格及其跨行跨列区域
+            for r in range(i, i + rowspan):
+                for c in range(col_idx, col_idx + colspan):
+                    if r >= len(grid) or c >= max_cols:
+                        continue
+
+                    if r == i and c == col_idx:
+                        continue  # 跳过主单元格
+
+                    if r == i:  # 同一行，左合并
+                        grid[r][c] = "<lcel>"  # L
+                    elif c == col_idx:  # 同一列，上合并
+                        grid[r][c] = "<ucel>"  # U
+                    else:  # 交叉合并
+                        grid[r][c] = "<xcel>"  # X
+            
+            col_idx += colspan
+
+    otsl = [""]
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            otsl_tag = grid[i][j]
+            if not otsl_tag:
+                otsl_tag = "<ecel>"
+            if i == 0 and otsl_tag == "<ucel>":
+                otsl_tag = "<ecel>"
+            if j == 0 and otsl_tag == "<lcel>":
+                otsl_tag = "<ecel>"
+            content = cell_contents[i][j]
+            otsl.append(otsl_tag + content.strip())
+        otsl.append("<nl>\n")
+    return "".join(otsl)
+
 if __name__ == "__main__":
     import time
     
@@ -411,3 +560,4 @@ if __name__ == "__main__":
 <ucel><ucel><ucel><ucel><ucel><fcel>● Bristol-Myers Squibb*<ucel><ucel><nl>
 """
     print(convert_otsl_to_html(b))
+
