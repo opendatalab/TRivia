@@ -21,6 +21,11 @@ TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognit
 
 TRivia是一个新颖的自监督表格识别VLM的微调框架。我们在这个仓库中发布了TRivia-3B。TRivia-3B是一个基于Qwen2.5-VL-3B，使用TRivia框架进行微调的先进表格识别VLM，并在多个真实世界的表格识别基准上展现出强大的性能。
 
+# 最新动态
+- 2026.07.14 我们发布了 TRivia 的 [QA 监督生成代码](./data_pipeline)。
+- 🎉🎉🎉 2026.02.26 TRivia 已被 CVPR 2026 接收。
+- 2025.12.26 我们发布了 TRivia 的[训练代码](./training)。
+
 # 关键特性:
 - ⭐ 强大的表格识别能力，TRivia-3B不仅适用于电子、扫描和拍照等等表格，而且能自动分辨表格图片中的背景与主体，仅识别表格主体部分。
 - 📃 可复现的训练管线，仅使用无标签数据且无需蒸馏即可推动表格识别能力的提升。

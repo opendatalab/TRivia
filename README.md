@@ -22,7 +22,9 @@ TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognit
 TRivia is a novel self-supervised fine-tuning framework of vision-language models for table recognition. This repository contains the **TRivia-3B**, an advanced table recognition VLMs trained from Qwen2.5-VL-3B using TRivia, and demo code. TRivia-3B has demonstrated superior performance on multiple real-world table recognition benchmarks.
 
 # News
-- 2025.12.26 We have released the [training code](./training) of TRivia.
+- 2026.07.14 We released the [QA-supervision generation pipeline](./data_pipeline) for TRivia.
+- 🎉🎉🎉 2026.02.26 TRivia was accepted to CVPR 2026.
+- 2025.12.26 We released the [training code](./training) for TRivia.
 
 # Key Features:
 - ⭐ Powerful table recognition capabilities, generalizing across digital tables, scanned tables, and photographed tables.
