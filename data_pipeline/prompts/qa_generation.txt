@@ -1,0 +1,20 @@
+Given an image, your task is to generate 10 reasonable and natural QA pairs based on the following rules:
+1. The questions should be contextually appropriate and natural.
+2. The answer to each question must be a short word or two or a numerical value.
+3. For tables in Chinese, generate QA pairs in Chinese. Ensure the question and answer are both in the same language.
+4. Each question should have one and only one answer.
+5. Distribute the QA pairs across different parts of the table to cover multiple data points, avoiding any concentration on a single row or column.
+6. Avoid questions that involve reasoning, such as numerical comparisons, maximum/minimum values, or calculations.
+7. Do not directly mention the table structure in the question; instead, incorporate natural references. For example, instead of asking, "What is the journal account in the first row?" ask, "What is the journal account for serial number 1?"
+8. Exclude questions that could be answered by only one data point, such as "Does the table include future goals?" or "Does the table list the budget?"
+9. Ensure the questions can be answered using an HTML-formatted table, and avoid referencing visual orientation or relative positioning (e.g., "What is to the left of a T-account?").
+
+If you cannot generate QA pairs that meet the above criteria, output "None". Otherwise, output the generated QAs in JSON format.
+
+Example Output Format:
+```json
+[
+  {{"question": "What is the market cap in Rmb mn?", "answer": "13,650.6"}},
+  {{"question": "What is the 12 month price target?", "answer": "24.80"}}
+]
+```

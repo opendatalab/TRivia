@@ -7,10 +7,10 @@ from typing import Any
 from .io import first_image, message_text
 
 
-def make_client(base_url: str, api_key: str) -> Any:
-    from openai import OpenAI
+def make_async_client(base_url: str, api_key: str) -> Any:
+    from openai import AsyncOpenAI
 
-    return OpenAI(base_url=base_url, api_key=api_key)
+    return AsyncOpenAI(base_url=base_url, api_key=api_key)
 
 
 def image_data_url(path: str) -> str:
@@ -38,22 +38,18 @@ def row_to_openai_messages(row: dict[str, Any]) -> list[dict[str, Any]]:
     return [vision_user_message(message_text(row["messages"]), first_image(row))]
 
 
-def chat_completion(
+async def async_chat_completion(
     client: Any,
     model: str,
     messages: list[dict[str, Any]],
-    temperature: float,
-    max_tokens: int,
-    top_p: float = 1.0,
-    n: int = 1,
+    request: dict[str, Any],
+    samples: int = 1,
 ) -> list[str]:
-    response = client.chat.completions.create(
+    response = await client.chat.completions.create(
         model=model,
         messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        top_p=top_p,
-        n=n,
+        n=samples,
+        **request,
     )
     return [choice.message.content or "" for choice in response.choices]
 

@@ -8,6 +8,9 @@ from ..utils.io import read_jsonl, stage_file, write_jsonl
 
 
 def normalize_answer(text: str) -> list[str]:
+    match = re.search(r"<answer>(.*?)</answer>", text, flags=re.DOTALL)
+    if match:
+        text = match.group(1)
     return re.findall(r"\w+", text.lower())
 
 

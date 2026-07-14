@@ -1087,9 +1087,9 @@ class OpenAIQAF1Score(ORM):
                     client = random.choice(self.clients)
                     prompt = zh_llm_prompt if contains_chinese(question) else en_llm_prompt
                     response = client.chat.completions.create(
-                        model="Qwen/Qwen3-8B",
+                        model="Qwen/Qwen3.5-9B",
                         messages=[
-                            {"role": "user", "content": prompt.format(question, html_table)},
+                            {"role": "user", "content": prompt.format(html_table, question)},
                         ],
                         max_tokens=100,
                         temperature=0,

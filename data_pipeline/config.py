@@ -7,8 +7,10 @@ with the same variable names to ``python -m data_pipeline.cli --config``.
 from __future__ import annotations
 
 import importlib.util
-from dataclasses import dataclass, fields
+from copy import deepcopy
+from dataclasses import dataclass, field, fields
 from pathlib import Path
+from typing import Any
 
 
 INPUT_JSONL = "input.jsonl"
@@ -24,6 +26,7 @@ NUM_SAMPLES = 4
 TEMPERATURE = 1.0
 MAX_TOKENS = 8192
 TOP_P = 1.0
+OPENAI_CONCURRENCY = 32
 
 VLLM_TENSOR_PARALLEL_SIZE = 1
 VLLM_GPU_MEMORY_UTILIZATION = 0.8
@@ -32,6 +35,7 @@ VLLM_USE_PROCESSOR_CHAT_TEMPLATE = False
 
 TEDS_MIN = 0.5
 TEDS_MAX = 0.9
+TEDS_WORKERS = 8
 
 QA_GEN_URL = "http://localhost:10000/v1"
 QA_GEN_MODEL = "Qwen/Qwen3-8B"
@@ -57,6 +61,61 @@ S3_DIR = "s3_qa_generation"
 S5_DIR = "s5_qa_evaluation"
 S6_DIR = "s6_qa_filter"
 
+GENERATION_CONFIG: dict[str, Any] = {
+    "stage_common": {
+        "models": [
+            {
+                "name": BASE_OPENAI_MODEL,
+                "request": {
+                    "max_tokens": 4096,
+                    "temperature": TEMPERATURE,
+                    "top_p": 0.95,
+                    "presence_penalty": 1.5,
+                    "extra_body": {
+                        "top_k": 20,
+                        "min_p": 0.0,
+                        "repetition_penalty": 1.0,
+                        "enable_thinking": False,
+                    },
+                },
+                "samples": NUM_SAMPLES,
+            }
+        ],
+    },
+    "qa_generation": {
+        "models": [
+            {
+                "name": QA_GEN_MODEL,
+                "request": {
+                    "max_tokens": QA_GEN_MAX_TOKENS,
+                    "temperature": QA_GEN_TEMPERATURE,
+                    "top_p": 1.0,
+                    "extra_body": {
+                        "enable_thinking": False,
+                    },
+                },
+                "samples": 1,
+            }
+        ],
+    },
+    "qa_evaluation": {
+        "models": [
+            {
+                "name": QA_ANSWER_MODEL,
+                "request": {
+                    "max_tokens": QA_ANSWER_MAX_TOKENS,
+                    "temperature": QA_ANSWER_TEMPERATURE,
+                    "top_p": 1.0,
+                    "extra_body": {
+                        "enable_thinking": False,
+                    },
+                },
+                "samples": 1,
+            }
+        ],
+    },
+}
+
 
 @dataclass(frozen=True)
 class PipelineConfig:
@@ -73,6 +132,8 @@ class PipelineConfig:
     temperature: float = TEMPERATURE
     max_tokens: int = MAX_TOKENS
     top_p: float = TOP_P
+    openai_concurrency: int = OPENAI_CONCURRENCY
+    generation_config: dict[str, Any] = field(default_factory=lambda: deepcopy(GENERATION_CONFIG))
 
     vllm_tensor_parallel_size: int = VLLM_TENSOR_PARALLEL_SIZE
     vllm_gpu_memory_utilization: float = VLLM_GPU_MEMORY_UTILIZATION
@@ -81,6 +142,7 @@ class PipelineConfig:
 
     teds_min: float = TEDS_MIN
     teds_max: float = TEDS_MAX
+    teds_workers: int = TEDS_WORKERS
 
     qa_gen_url: str = QA_GEN_URL
     qa_gen_model: str = QA_GEN_MODEL
