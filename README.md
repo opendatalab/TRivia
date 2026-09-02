@@ -13,10 +13,15 @@ TRivia: Self-supervised Fine-tuning of Vision-Language Models for Table Recognit
 </p>
 
 <p align="center">
-<a href=""><b>📜 arXiv</b></a> |
-<a href="https://github.com/opendatalab/TRivia"><b>Github</b></a> |
-<a href="https://huggingface.co/spaces/opendatalab/TRivia-3B"><b>🤗 Huggingface Demo</b></a>
-<a href="https://huggingface.co/Carkham/TRivia"><b>🤗 Huggingface Model</b></a>
+  <a href=""><b>📜 arXiv</b></a> |
+  <a href="https://github.com/opendatalab/TRivia"><b>Github</b></a> |
+  <a href="https://huggingface.co/spaces/opendatalab/TRivia-3B"><b>🤗 Huggingface Demo</b></a> |
+  <a href="https://huggingface.co/Carkham/TRivia"><b>🤗 Huggingface Model</b></a>
+</p>
+<p align="center">
+  <a href="https://paperswithcode.co/api/v1/papers/2512.01248/leaderboard-badge-link?eval=24256">
+    <img src="https://paperswithcode.co/api/v1/papers/2512.01248/leaderboard-badge.svg?eval=24256&live=1" alt="Papers with Code: SOTA on PubTabNet">
+  </a>
 </p>
 
 TRivia is a novel self-supervised fine-tuning framework of vision-language models for table recognition. This repository contains the **TRivia-3B**, an advanced table recognition VLMs trained from Qwen2.5-VL-3B using TRivia, and demo code. TRivia-3B has demonstrated superior performance on multiple real-world table recognition benchmarks.
